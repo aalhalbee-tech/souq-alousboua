@@ -3,182 +3,90 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>سوق الأسبوع - السوق السوري الحر</title>
+<title>سوق الأسبوع - بيع واشتري بأمان</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
-<style>
-body{font-family:'Tajawal',sans-serif;background:#f8fafc}
-.card{transition:all .25s}
-.card:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(0,0,0,.1)}
-.line-clamp-1{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
-.line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-</style>
+<style>body{font-family:'Tajawal',sans-serif;background:#f8fafc}.card{transition:.25s}.card:hover{transform:translateY(-4px);box-shadow:0 16px 30px rgba(0,0,0,.1)}</style>
 </head>
-<body class="min-h-screen">
-
+<body>
 <script>
-const SUPABASE_URL = 'https://vnxvbrlztdlbpfwydzgj.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_hqyuGb4LiX4hV2E7HI-ADQ_7RfbZjw9';
+const SUPABASE_URL='https://vnxvbrlztdlbpfwydzgj.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_hqyuGb4LiX4hV2E7HI-ADQ_7RfbZjw9';
 </script>
 
 <header class="bg-white shadow-sm sticky top-0 z-50">
-<div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+<div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
 <div class="flex items-center gap-3">
-<div class="w-11 h-11 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow">س</div>
-<div><h1 class="font-black text-xl leading-none">سوق الأسبوع</h1><p class="text-[11px] text-gray-400">السوق السوري الحر - supabase حقيقي ✅</p></div>
+<div class="w-11 h-11 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center text-white font-black text-xl">س</div>
+<div><h1 class="font-black text-xl">سوق الأسبوع</h1><p class="text- text-gray-400">بيع واشتري بأمان • شام كاش 💳</p></div>
 </div>
-<button onclick="openAdd()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-full font-bold shadow">+ أضف إعلان</button>
+<div class="flex gap-2 items-center">
+<button id="loginBtn" onclick="document.getElementById('loginModal').classList.remove('hidden')" class="border px-4 py-2 rounded-full font-bold text-sm">👤 دخول</button>
+<div id="userBox" class="hidden gap-2 items-center"><span id="userName" class="text-sm font-bold"></span><button onclick="localStorage.removeItem('souq_user');location.reload()" class="text-xs bg-gray-100 px-3 py-1 rounded-full">خروج</button></div>
+<button onclick="document.getElementById('modal').classList.remove('hidden')" class="bg-emerald-600 text-white px-5 py-2.5 rounded-full font-bold text-sm">+ نشر إعلان</button>
 </div>
-<div class="max-w-7xl mx-auto px-4 pb-4 flex gap-2 overflow-auto">
-<input id="search" oninput="render()" placeholder="ابحث: آيفون، سيارة، شقة..." class="flex-1 min-w-[220px] border rounded-full px-5 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500">
-<select id="catFilter" onchange="render()" class="border rounded-full px-4 py-3 text-sm bg-white"><option value="">كل الأقسام</option><option>جوالات</option><option>سيارات</option><option>عقارات</option><option>أثاث</option><option>إلكترونيات</option><option>ملابس</option><option>وظائف</option><option>أخرى</option></select>
-<select id="locFilter" onchange="render()" class="border rounded-full px-4 py-3 text-sm bg-white"><option value="">كل المناطق</option><option>دمشق</option><option>حلب</option><option>حمص</option><option>اللاذقية</option><option>طرطوس</option><option>حماة</option><option>إدلب</option><option>دير الزور</option><option>السويداء</option><option>درعا</option></select>
+</div>
+<div class="max-w-7xl mx-auto px-4 pb-3 flex gap-2 overflow-auto">
+<input id="search" oninput="render()" placeholder="ابحث..." class="flex-1 min-w- border rounded-full px-5 py-3 text-sm outline-none">
+<select id="catFilter" onchange="render()" class="border rounded-full px-4 py-3 text-sm bg-white"><option value="">كل الأقسام</option><option>جوالات</option><option>سيارات</option><option>عقارات</option><option>أثاث</option><option>إلكترونيات</option></select>
+<select id="locFilter" onchange="render()" class="border rounded-full px-4 py-3 text-sm bg-white"><option value="">كل المناطق</option><option>دمشق</option><option>حلب</option><option>منبج</option><option>حمص</option><option>حماة</option><option>اللاذقية</option></select>
+<select id="payFilter" onchange="render()" class="border rounded-full px-4 py-3 text-sm bg-white"><option value="">كل الدفع</option><option value="sham">💳 شام كاش</option></select>
 </div>
 </header>
 
 <main class="max-w-7xl mx-auto px-4 py-6">
-<div id="status" class="hidden mb-4 p-4 rounded-2xl text-sm font-bold"></div>
-<div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
-<div id="empty" class="hidden text-center py-24 text-gray-400">
-<div class="text-7xl mb-4">🛍️</div>
-<p class="font-bold">لا يوجد إعلانات حالياً</p>
-<p class="text-sm mt-1">كن أول من ينشر!</p>
-</div>
+<div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
 </main>
 
+<!-- دخول -->
+<div id="loginModal" class="hidden fixed inset-0 bg-black/60 z-[70] flex items-center justify-center p-4">
+<div class="bg-white rounded- w-full max-w-sm p-7">
+<h2 class="font-black text-xl mb-4">تسجيل دخول</h2>
+<input id="loginPhone" placeholder="رقم 9639..." class="w-full border rounded-2xl px-4 py-3 mb-3">
+<input id="loginName" placeholder="اسمك" class="w-full border rounded-2xl px-4 py-3 mb-3">
+<button onclick="const p=document.getElementById('loginPhone').value;const n=document.getElementById('loginName').value||p;if(!p)return alert('رقم');localStorage.setItem('souq_user',JSON.stringify({phone:p,name:n}));location.reload()" class="w-full bg-zinc-900 text-white py-3 rounded-2xl font-black">دخول</button>
+<button onclick="document.getElementById('loginModal').classList.add('hidden')" class="w-full mt-2 bg-gray-100 py-3 rounded-2xl">إغلاق</button>
+</div>
+</div>
+
+<!-- نشر -->
 <div id="modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4">
-<div class="bg-white rounded-[28px] w-full max-w-lg max-h-[92vh] overflow-auto p-7 shadow-2xl">
-<div class="flex justify-between items-center mb-5"><h2 class="font-black text-xl">نشر إعلان جديد</h2><button onclick="closeAdd()" class="w-9 h-9 bg-gray-100 hover:bg-gray-200 rounded-full">✕</button></div>
-<form onsubmit="submitAd(event)" class="space-y-4">
-<input id="title" required placeholder="عنوان الإعلان *" class="w-full border border-gray-200 rounded-2xl px-4 py-3.5 text-sm outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
-<textarea id="desc" required placeholder="الوصف الكامل..." class="w-full border border-gray-200 rounded-2xl px-4 py-3.5 text-sm outline-none focus:ring-2 focus:ring-emerald-500 h-24"></textarea>
-<div class="grid grid-cols-2 gap-3">
-<input id="price" type="number" required placeholder="السعر $" class="border border-gray-200 rounded-2xl px-4 py-3.5 text-sm outline-none focus:ring-2 focus:ring-emerald-500">
-<select id="cat" class="border border-gray-200 rounded-2xl px-4 py-3.5 text-sm bg-white"><option>جوالات</option><option>سيارات</option><option>عقارات</option><option>أثاث</option><option>إلكترونيات</option><option>ملابس</option><option>وظائف</option><option>أخرى</option></select>
+<div class="bg-white rounded- w-full max-w-lg max-h- overflow-auto p-7">
+<div class="flex justify-between mb-4"><h2 class="font-black text-xl">نشر إعلان</h2><button onclick="document.getElementById('modal').classList.add('hidden')" class="w-9 h-9 bg-gray-100 rounded-full">✕</button></div>
+<form onsubmit="submitAd(event)" class="space-y-3">
+<input id="title" required placeholder="عنوان *" class="w-full border rounded-2xl px-4 py-3 text-sm">
+<textarea id="desc" required placeholder="وصف..." class="w-full border rounded-2xl px-4 py-3 text-sm h-20"></textarea>
+<div class="grid grid-cols-2 gap-2"><input id="price" type="number" required placeholder="سعر $" class="border rounded-2xl px-4 py-3 text-sm"><select id="cat" class="border rounded-2xl px-4 py-3 text-sm bg-white"><option>جوالات</option><option>سيارات</option><option>عقارات</option></select></div>
+<div class="grid grid-cols-2 gap-2"><select id="loc" class="border rounded-2xl px-4 py-3 text-sm bg-white"><option>دمشق</option><option>حلب</option><option>منبج</option><option>حمص</option></select><input id="name" required placeholder="اسمك" class="border rounded-2xl px-4 py-3 text-sm"></div>
+<input id="phone" required placeholder="واتساب 9639..." class="w-full border rounded-2xl px-4 py-3 text-sm">
+<!-- شام كاش -->
+<div class="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+<label class="flex gap-2 font-bold text-sm"><input type="checkbox" id="shamEnabled" onchange="document.getElementById('shamBox').classList.toggle('hidden',!this.checked)"> 💳 أقبل شام كاش</label>
+<div id="shamBox" class="hidden mt-2"><input id="shamWallet" placeholder="رقم محفظة شام كاش" class="w-full border rounded-xl px-4 py-3 text-sm bg-white"><p class="text- text-amber-700 mt-1">أكثر من 4 مليون مستخدم في سوريا، تحويل آمن عبر وكلاء معتمدين【422492465781771594†L20-L23】</p></div>
 </div>
-<div class="grid grid-cols-2 gap-3">
-<select id="loc" class="border border-gray-200 rounded-2xl px-4 py-3.5 text-sm bg-white"><option>دمشق</option><option>حلب</option><option>حمص</option><option>اللاذقية</option><option>طرطوس</option><option>حماة</option><option>إدلب</option><option>دير الزور</option><option>السويداء</option><option>درعا</option></select>
-<select id="cond" class="border border-gray-200 rounded-2xl px-4 py-3.5 text-sm bg-white"><option>جديد</option><option>مستعمل - ممتاز</option><option>مستعمل - جيد</option></select>
-</div>
-<input id="name" required placeholder="اسمك *" class="w-full border border-gray-200 rounded-2xl px-4 py-3.5 text-sm">
-<input id="phone" required placeholder="رقم الواتساب (9639...)*" class="w-full border border-gray-200 rounded-2xl px-4 py-3.5 text-sm">
-<div>
-<label class="text-xs font-bold text-gray-600 mb-2 block">الصور (حتى 4)</label>
-<input id="images" type="file" accept="image/*" multiple class="w-full border border-dashed border-gray-300 rounded-2xl px-4 py-3 text-sm bg-gray-50">
-<div id="preview" class="flex gap-2 flex-wrap mt-3"></div>
-</div>
-<button id="submitBtn" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white py-4 rounded-2xl font-black text-[15px] shadow-lg">نشر الآن في قاعدة حقيقية ✅</button>
-<p class="text-[11px] text-center text-gray-400">الإعلان يحفظ في Supabase ويظهر للجميع فوراً وللأبد</p>
+<input id="images" type="file" accept="image/*" multiple class="w-full border-dashed border rounded-2xl px-4 py-3 text-sm bg-gray-50">
+<div id="preview" class="flex gap-2 flex-wrap"></div>
+<button id="submitBtn" class="w-full bg-emerald-600 text-white py-4 rounded-2xl font-black">نشر الآن ✅</button>
 </form>
 </div>
 </div>
 
 <script>
-let sb=null, all=[], tempImages=[];
-
-function showStatus(msg,cls){
-  const s=document.getElementById('status');
-  s.textContent=msg; s.className='mb-4 p-4 rounded-2xl text-sm font-bold '+cls; s.classList.remove('hidden');
-}
-
-function init(){
- try{
-  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  return true;
- }catch(e){ showStatus('خطأ اتصال: '+e.message,'bg-red-100 text-red-700'); return false; }
-}
-
-async function load(){
- if(!sb && !init()) return;
- document.getElementById('grid').innerHTML='<div class="col-span-full text-center py-16"><div class="animate-spin w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full mx-auto mb-3"></div><p class="text-gray-400">جاري التحميل من قاعدة البيانات الحقيقية...</p></div>';
- const {data,error} = await sb.from('listings').select('*').order('created_at',{ascending:false});
- if(error){
-   if(error.message.includes('does not exist')) showStatus('⚠️ شغّل كود SQL أولاً في Supabase > SQL Editor > New Query','bg-amber-100 text-amber-800 border border-amber-200');
-   else showStatus('خطأ: '+error.message,'bg-red-100 text-red-700');
-   document.getElementById('grid').innerHTML='';
-   return;
- }
- all=data||[];
- render();
- showStatus(`✅ تم تحميل ${all.length} إعلان من Supabase - قاعدة حقيقية تعمل!`,'bg-emerald-50 text-emerald-700 border border-emerald-200');
- setTimeout(()=>document.getElementById('status').classList.add('hidden'),5000);
-}
-
+let sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY), all=[], tempImages=[];
+const saved=localStorage.getItem('souq_user');
+if(saved){ const u=JSON.parse(saved); document.getElementById('loginBtn').classList.add('hidden'); document.getElementById('userBox').classList.remove('hidden'); document.getElementById('userBox').classList.add('flex'); document.getElementById('userName').textContent='مرحبا '+u.name; }
+async function load(){ const {data}=await sb.from('listings').select('*').order('created_at',{ascending:false}); all=data||[]; render(); }
 function render(){
- const q=document.getElementById('search').value.toLowerCase();
- const cf=document.getElementById('catFilter').value;
- const lf=document.getElementById('locFilter').value;
- const f=all.filter(l=>{
-  const matchQ = !q || l.title.toLowerCase().includes(q) || (l.description||'').toLowerCase().includes(q);
-  const matchC = !cf || l.category===cf;
-  const matchL = !lf || l.location===lf;
-  return matchQ && matchC && matchL;
- });
- const grid=document.getElementById('grid');
- const empty=document.getElementById('empty');
- if(!f.length){ grid.innerHTML=''; empty.classList.remove('hidden'); return; }
- empty.classList.add('hidden');
- grid.innerHTML=f.map(l=>`
-  <div class="card bg-white rounded-[22px] overflow-hidden border border-gray-100">
-   <div class="h-52 bg-gray-100 relative overflow-hidden">
-    ${l.images && l.images[0] ? `<img src="${l.images[0]}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-5xl bg-gradient-to-br from-gray-100 to-gray-200">📦</div>`}
-    <span class="absolute top-3 right-3 bg-white/95 backdrop-blur px-3 py-1.5 rounded-full text-xs font-bold shadow">${l.category||''}</span>
-    <span class="absolute top-3 left-3 bg-emerald-600 text-white px-3 py-1.5 rounded-full text-xs font-black shadow">${l.price||0}$</span>
-   </div>
-   <div class="p-4">
-    <h3 class="font-bold text-[15px] line-clamp-1 leading-snug">${l.title}</h3>
-    <p class="text-[13px] text-gray-500 line-clamp-2 mt-1.5 leading-relaxed">${l.description||''}</p>
-    <div class="flex justify-between items-center mt-3 text-[11px] text-gray-400">
-     <span>📍 ${l.location||''} • ${l.condition||''}</span>
-     <span>${new Date(l.created_at).toLocaleDateString('ar-SY')}</span>
-    </div>
-    <div class="mt-3.5 flex gap-2">
-     <a href="https://wa.me/${(l.phone||'').replace(/[^0-9]/g,'')}" target="_blank" class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-center py-2.5 rounded-full font-bold text-xs transition">💬 واتساب</a>
-     <button onclick="alert('👤 ${l.name}\n📞 ${l.phone}')" class="flex-1 bg-gray-100 hover:bg-gray-200 py-2.5 rounded-full font-bold text-xs transition">📞 اتصال</button>
-    </div>
-   </div>
-  </div>
- `).join('');
+ const q=document.getElementById('search').value.toLowerCase(), cf=document.getElementById('catFilter').value, lf=document.getElementById('locFilter').value, pf=document.getElementById('payFilter').value;
+ const f=all.filter(l=>{ const mQ=!q||l.title.toLowerCase().includes(q); const mC=!cf||l.category===cf; const mL=!lf||l.location===lf; const mP=!pf||(pf==='sham'&&(l.sham_enabled||l.sham_wallet)); return mQ&&mC&&mL&&mP; });
+ document.getElementById('grid').innerHTML=f.map(l=>`
+ <div class="bg-white rounded- border overflow-hidden">
+ <div class="h-48 bg-gray-100 relative"><img src="${l.images?.[0]||''}" class="w-full h-full object-cover" onerror="this.style.display='none'"><div class="absolute inset-0 flex items-center justify-center text-4xl">${l.images?.[0]?'':'📦'}</div><span class="absolute top-3 right-3 bg-white px-3 py-1 rounded-full text-xs font-bold">${l.category}</span><span class="absolute top-3 left-3 bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-black">${l.price}$</span>${(l.sham_enabled||l.sham_wallet)?'<span class="absolute bottom-3 right-3 bg-amber-400 px-2 py-1 rounded-full text- font-black">💳 شام كاش</span>':''}</div>
+ <div class="p-4"><h3 class="font-bold text-">${l.title}</h3><p class="text-xs text-gray-500 mt-1">📍 ${l.location}</p><div class="flex gap-2 mt-3"><a href="https://wa.me/${(l.phone||'').replace(/[^0-9]/g,'')}" target="_blank" class="flex-1 bg-emerald-50 text-emerald-700 text-center py-2 rounded-full font-bold text-xs">واتساب</a><button onclick="alert('محفظة شام كاش: '+(l.sham_wallet||l.phone)+' - افتح تطبيق شام كاش وحول المبلغ')" class="flex-1 bg-amber-100 py-2 rounded-full font-bold text-xs">${(l.sham_enabled||l.sham_wallet)?'💳 شام كاش':'📞 اتصال'}</button></div></div></div>`).join('');
 }
-
-function openAdd(){ document.getElementById('modal').classList.remove('hidden'); }
-function closeAdd(){ document.getElementById('modal').classList.add('hidden'); }
-
-document.getElementById('images').addEventListener('change',e=>{
- tempImages=[]; const p=document.getElementById('preview'); p.innerHTML='';
- [...e.target.files].slice(0,4).forEach(f=>{
-  const r=new FileReader();
-  r.onload=ev=>{ tempImages.push(ev.target.result); p.innerHTML+=`<img src="${ev.target.result}" class="w-16 h-16 rounded-2xl object-cover border">`; };
-  r.readAsDataURL(f);
- });
-});
-
-async function submitAd(ev){
- ev.preventDefault();
- const btn=document.getElementById('submitBtn');
- btn.disabled=true; btn.textContent='جاري النشر في Supabase...';
- const data={
-  title: document.getElementById('title').value,
-  description: document.getElementById('desc').value,
-  price: parseInt(document.getElementById('price').value)||0,
-  category: document.getElementById('cat').value,
-  location: document.getElementById('loc').value,
-  condition: document.getElementById('cond').value,
-  name: document.getElementById('name').value,
-  phone: document.getElementById('phone').value,
-  images: tempImages,
-  status:'active'
- };
- const {error} = await sb.from('listings').insert([data]);
- btn.disabled=false; btn.textContent='نشر الآن في قاعدة حقيقية ✅';
- if(error){ alert('خطأ: '+error.message); return; }
- closeAdd(); ev.target.reset(); tempImages=[]; document.getElementById('preview').innerHTML='';
- showStatus('🎉 تم نشر الإعلان بنجاح - محفوظ في قاعدة حقيقية ولن يضيع!','bg-emerald-100 text-emerald-800 border border-emerald-200');
- load();
-}
-
-init();
+document.getElementById('images').addEventListener('change',e=>{ tempImages=[]; const p=document.getElementById('preview'); p.innerHTML=''; [...e.target.files].slice(0,4).forEach(f=>{ const r=new FileReader(); r.onload=ev=>{ tempImages.push(ev.target.result); p.innerHTML+=`<img src="${ev.target.result}" class="w-16 h-16 rounded-xl object-cover">`; }; r.readAsDataURL(f); }); });
+async function submitAd(ev){ ev.preventDefault(); const btn=document.getElementById('submitBtn'); btn.disabled=true; btn.textContent='جاري...'; const data={title:title.value,description:desc.value,price:parseInt(price.value)||0,category:cat.value,location:loc.value,name:name.value,phone:phone.value,images:tempImages,sham_enabled:document.getElementById('shamEnabled').checked,sham_wallet:document.getElementById('shamWallet').value,status:'active'}; const {error}=await sb.from('listings').insert([data]); btn.disabled=false; btn.textContent='نشر الآن ✅'; if(error)return alert(error.message); document.getElementById('modal').classList.add('hidden'); ev.target.reset(); load(); }
 load();
 </script>
 </body>
